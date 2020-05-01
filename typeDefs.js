@@ -10,6 +10,7 @@ module.exports = gql`
 
     type Query{
         me:User
+        getPins:[Pin!]
     }
 
     input CreatePinInput {
@@ -22,6 +23,8 @@ module.exports = gql`
 
     type Mutation{
         createPin(input:CreatePinInput!):Pin
+
+        deletePin(pinId:ID!):Pin
     }
 
     type Pin{
