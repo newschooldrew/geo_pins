@@ -7,6 +7,8 @@ import Blog from './Blog'
 import {useClient} from '../client'
 import {GET_PINS} from '../graphql/queries'
 import {DELETE_PIN} from '../graphql/mutations'
+import {Subscription} from 'react-apollo'
+import {PIN_ADDED_SUBSCRIPTION,PIN_UPDATED_SUBSCRIPTION,PIN_DELETED_SUBSCRIPTION} from '../graphql/subscriptions'
 import differenceInMinutes from 'date-fns/difference_in_minutes'
 import { Typography } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
@@ -78,8 +80,7 @@ const [popup,setPopup] = useState(null)
 
   const handleDelete = async popup => {
     const variables = {pinId:popup._id}
-    const {deletePin} = await client.request(DELETE_PIN, variables)
-    dispatch({type:"DELETE_PIN",payload:deletePin})
+    await client.request(DELETE_PIN, variables)
     setPopup(null)
   }
 
@@ -172,7 +173,27 @@ const [popup,setPopup] = useState(null)
             </div>
           </Popup>)}
       </ReactMapGL>
-
+                <Subscription 
+                  subscription={PIN_ADDED_SUBSCRIPTION}
+                  onSubscriptionData={({subscriptionData}) =>{
+                    const {pinAdded} = subscriptionData.data;
+                    dispatch({type:"CREATE_PIN",payload:pinAdded})
+                  }}
+                />
+                <Subscription 
+                  subscription={PIN_UPDATED_SUBSCRIPTION}
+                  onSubscriptionData={({subscriptionData}) =>{
+                    const {pinUpdated} = subscriptionData.data;
+                    dispatch({type:"ADD_COMMENT",payload:pinUpdated})
+                  }}
+                />
+                <Subscription 
+                  subscription={PIN_DELETED_SUBSCRIPTION}
+                  onSubscriptionData={({subscriptionData}) =>{
+                    const {pinDeleted} = subscriptionData.data;
+                    dispatch({type:"DELETE_PIN",payload:pinDeleted})
+                  }}
+                />                
       <Blog />
     </div>
   )
