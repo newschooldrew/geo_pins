@@ -99,6 +99,7 @@ const [popup,setPopup] = useState(null)
             onViewportChange={newViewport => setViewport(newViewport)}
           />
         </div>
+        {/* Set a marker based off your own position */}
         {userPosition && (
           <Marker
             latitude={userPosition.latitude}
@@ -112,6 +113,7 @@ const [popup,setPopup] = useState(null)
               />
           </Marker>
         )}
+        {/* Set a marker based off the user's click */}
         {state.draft && (
                     <Marker
                     latitude={state.draft.latitude}
@@ -125,7 +127,7 @@ const [popup,setPopup] = useState(null)
                       />
                   </Marker>
         )}
-        {/* Created pins */}
+        {/* Map out created pins */}
         {
           state.pins.map(pin =>(
             <Marker

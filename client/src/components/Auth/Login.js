@@ -12,6 +12,8 @@ const Login = ({ classes }) => {
 
   const onFailure = err =>{
     console.error("there was an error" + err)
+    // isAuth property will be false
+    dispatch({type:"IS_LOGGED_IN",payload:false})
   }
 
   const onSuccess = async googleUser =>{
