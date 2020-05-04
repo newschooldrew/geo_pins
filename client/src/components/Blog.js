@@ -5,9 +5,10 @@ import CreatePin from './Pin/CreatePin'
 import { withStyles } from "@material-ui/core/styles";
 import { Paper } from "@material-ui/core";
 import PinContent from './Pin/PinContent'
-
+import {unstable_useMediaQuery as useMediaQuery} from '@material-ui/core/useMediaQuery'
 
 const Blog = ({ classes }) => {
+  const mobileSize = useMediaQuery('(max-width:650px)')
   const {state} = useContext(Context)
   const {currentPin} = state;
   const {draft} = state;
@@ -25,7 +26,7 @@ const Blog = ({ classes }) => {
   }
 
   return (
-    <Paper className={classes.root}>
+    <Paper className={mobileSize ? classes.rootMobile : classes.root}>
         <BlogContent />
     </Paper>
   );

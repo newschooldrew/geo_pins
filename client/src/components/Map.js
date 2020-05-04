@@ -8,6 +8,8 @@ import {useClient} from '../client'
 import {GET_PINS} from '../graphql/queries'
 import {DELETE_PIN} from '../graphql/mutations'
 import {Subscription} from 'react-apollo'
+import {unstable_useMediaQuery as useMediaQuery} from '@material-ui/core/useMediaQuery'
+
 import {PIN_ADDED_SUBSCRIPTION,PIN_UPDATED_SUBSCRIPTION,PIN_DELETED_SUBSCRIPTION} from '../graphql/subscriptions'
 import differenceInMinutes from 'date-fns/difference_in_minutes'
 import { Typography } from "@material-ui/core";
@@ -23,7 +25,17 @@ const INITIAL_VIEWPORT = {
 
 const Map = ({ classes }) => {
   const client = useClient()
+  const mobileSize = useMediaQuery('(max-width:650px)')
   const {state,dispatch} = useContext(Context) 
+
+  useEffect(() =>{
+      const pinExists = popup && state.pins.findIndex(pin =>pin._id === popup._id ) > -1
+
+      console.log(pinExists)
+      if (!pinExists){
+        setPopup(null)
+      }
+  },[state.pins.length])
 
   useEffect(() => {
     getPins()
@@ -85,9 +97,10 @@ const [popup,setPopup] = useState(null)
   }
 
   return (
-    <div className={classes.root}>
+    <div className={mobileSize ? classes.rootMobile : classes.root}>
       <ReactMapGL
         width="100vw"
+        scrollZoom={!mobileSize}
         height="calc(100vh - 64px)"
         mapStyle="mapbox://styles/mapbox/streets-v9"
         mapboxApiAccessToken="pk.eyJ1IjoibmV3c2Nob29sZHJldyIsImEiOiJjazluYmtpNXUwMDRtM2x0OGg2NTI5NjAyIn0.uy61TeD5vkt_0WreUMEm-w"
